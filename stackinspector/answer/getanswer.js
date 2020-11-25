@@ -11,7 +11,9 @@ async function OnPageLoad() {
         await DisplayAnswer(answerModel);
     }
     catch {
+        setTimeout(function () {
         HideLoadingIcon();
+        }, 200);
     }
 }
 
