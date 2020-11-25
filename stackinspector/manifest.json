@@ -1,0 +1,50 @@
+// @Made by Karl Mogensen 
+// Any content in this extension is copyrighted and you will have to get permission by the owner in order to use the code in your own project @
+
+
+{
+
+  "name": "stackinspector",
+  "version": "1.0",
+  "manifest_version": 2,
+
+
+  "content_scripts": [
+    {
+      "include_globs": [ "*://www.google.*/search*", "*://google.*/search*" ],
+      "matches": [ "*://*/*" ],
+      "js": [
+        "localstoragemanagement/localstoragemanagement.js",
+        "answer/getanswer.js",
+        "answer/displayanswer.js",
+        "answer/codehighlights/scripts/highlight.pack.js",
+        "answer/jquery.js"
+      ],
+      "persistent": false,
+      "run_at": "document_idle",
+      "css": [
+        "popup/styles/popup.css",
+        "answer/gif.css"
+      ]
+    }
+  ],
+  "browser_action": {
+    "default_popup": "popup/html/popup.html",
+    "default_title": "StackView"
+  },
+  "permissions": [
+    "storage"
+  ],
+  "web_accessible_resources": [
+    "answer/codehighlights/styles/solarized-light.css",
+    "answer/codehighlights/styles/gruvbox-dark.css",
+    "answer/loading.gif",
+    "answer/icon.png",
+    "cirkel.png"
+  ],
+  "icons": {
+    "16": "answer/icon.png",
+    "48": "answer/icon.png",
+    "128": "answer/icon.png"
+  }
+}

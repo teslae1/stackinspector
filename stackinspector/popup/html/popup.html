@@ -1,0 +1,32 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../styles/popup.css" />
+</head>
+<body style="background-color:#151313; color:white;">
+    <a style="top:0px; color:gray; position:absolute;" id="GitLink"><u>Open source</u></a>
+    <h1 style="text-align:center;"><a style="color:#ef8236;">stack</a>inspector</h1>
+    <h4>Display settings</h4>
+    <input type="checkbox" id="shouldUseCustomWidth"/>
+    <label>- Use custom width</label>
+    <div class="slidecontainer" >
+    <input type="range" min="1" max="100" value="40" class="slider" id="width" >
+</div>
+    <label>Font-size</label>    
+    <input type="number" value="13" id="fontSize" />
+    <label>Code-color theme</label>
+    <select id="codeColorPicker">
+        <option value="gruvbox-dark">gruvbox-dark</option>
+        <option value="solarized-light">solarized-light</option>
+    </select>
+    <br />
+    <br />
+    <button id="saveSettings" style="width:100%; color:white; background-color:#ef8236; text-align:center; text-decoration:none; display:inline-block; font-weight:bold; font-size:14px; border:none; padding: 6px 18px;">Save settings</button>
+    <script src="../../localstoragemanagement/localstoragemanagement.js"></script>
+
+    <script src="../scripts/popup.js"></script>
+</body>
+</html>

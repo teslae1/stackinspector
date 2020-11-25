@@ -1,0 +1,4 @@
+﻿.background-gif {
+    background: url('chrome-extension://__MSG_@@extension_id__/answer/loading.gif') no-repeat center ;
+    background-size:contain;
+}
