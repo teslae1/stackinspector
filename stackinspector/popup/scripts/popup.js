@@ -7,7 +7,7 @@ const defaultFontSize = 16;
 const defaultWidthSize = 40;
 const defualtCodeColor = "gruvbox-dark";
 const gitLinkId = "GitLink";
-const repoLink = "https://www.freecodecamp.org/news/how-to-publish-your-chrome-extension-dd8400a3d53/";
+const repoLink = "https://github.com/teslae1/stackinspector";
 
 var btn = document.getElementById(buttonId);
 btn.addEventListener("click", SaveSettings);
