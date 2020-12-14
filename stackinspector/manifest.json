@@ -31,7 +31,9 @@
     "default_title": "StackView"
   },
   "permissions": [
-    "storage"
+    "storage",
+    "*://www.google.*/search*",
+    "*://google.*/search*"
   ],
   "web_accessible_resources": [
     "answer/codehighlights/styles/solarized-light.css",
