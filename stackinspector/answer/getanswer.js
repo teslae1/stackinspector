@@ -1,20 +1,11 @@
 chrome.extension.sendMessage({}, OnPageLoad);
 
-async function OnPageLoad() {
+ function OnPageLoad() {
     if (!HasStackOverflowLinkInSearchResults()) {
         return;
     }
-    ShowLoadingIcon();
 
-    try {
-        var answerModel = await GetFirstOrDefaultAnswer();
-        await DisplayAnswer(answerModel);
-    }
-    catch {
-        setTimeout(function () {
-        HideLoadingIcon();
-        }, 200);
-    }
+    StartGetAndShowAnswerProcess();
 }
 
 function HasStackOverflowLinkInSearchResults() {
@@ -30,6 +21,21 @@ function HasStackOverflowLinkInSearchResults() {
         }
     }
     return false;
+}
+
+async function StartGetAndShowAnswerProcess() {
+
+    ShowLoadingIcon();
+
+    try {
+        var answerModel = await GetFirstOrDefaultAnswer();
+        await DisplayAnswer(answerModel);
+    }
+    catch {
+        setTimeout(function () {
+        HideLoadingIcon();
+        }, 200);
+    }
 }
 
 function SleepMilisecondsAndHideLoadingIcon(milisecondsToWait) {

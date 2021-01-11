@@ -1,5 +1,3 @@
-
-
 {
 
   "name": "stackinspector",
@@ -32,8 +30,7 @@
   },
   "permissions": [
     "storage",
-    "*://www.google.*/search*",
-    "*://google.*/search*"
+    "https://google.*/search"
   ],
   "web_accessible_resources": [
     "answer/codehighlights/styles/solarized-light.css",

@@ -12,12 +12,33 @@ const gifSizePixels = 45;
 async function LoadHtmlIntoRightHandSideOfSearchPage(html) {
     var width = await GetAnswerWidthSettingFromLocalStorageOrDefault();
     var fontSize = await GetAnswerFontSizeSettingFromLocalStorageOrDefault();
-    var startHtml = "<div id='" + questionHtmlId + "' class='col-12'  style=' font-size:" + fontSize + "px; display:none; width:" + width + "%;  text-overflow:ellipsis; z-index:" + answerZIndex + "; position:absolute; right:5%; text-align:left;'> " + html + " </div>"
+    var lineBreaksForTopOffset = GetTopOffsetAsHtmlLineBreaks(fontSize);
+    var startHtml = "<div id='" + questionHtmlId + "' class='col-12'  style=' font-size:" + fontSize + "px; display:none;  width:" + width + "%;  text-overflow:ellipsis; z-index:" + answerZIndex + "; position:absolute; right:5%; text-align:left;'> " + lineBreaksForTopOffset + html + " </div>"
     var atvcapDiv = document.getElementById("atvcap");
     atvcapDiv.insertAdjacentHTML("afterend", startHtml);
     $("#" + questionHtmlId).fadeIn(questionHtmlFadeInMiliseconds);
     HideLoadingIcon();
 }
+
+function GetTopOffsetAsHtmlLineBreaks(fontSize) {
+    var elementWhichHoldsRightSideContent = document.getElementById("rhs");
+    var offSetHeight = elementWhichHoldsRightSideContent.offsetHeight;
+    var googleDidAddItsOwnRightSideContent = offSetHeight > 20;
+
+    if (googleDidAddItsOwnRightSideContent) {
+        var breaks = "";
+        var pxlsPrBreak = fontSize;
+        var currentHeight = 0;
+        while (currentHeight < offSetHeight) {
+            breaks += "<br/>";
+            currentHeight += pxlsPrBreak;
+        }
+        return breaks;
+    }
+
+    return "";
+}
+
 
 function GetAutoDetectedWidth() {
     var centerCol = document.getElementById("center_col");
@@ -100,7 +121,7 @@ async function DisplayAnswer(answerModel) {
     var displayableHtml = CreateDisplayableHtml(answerModel);
     await LoadHtmlIntoRightHandSideOfSearchPage(displayableHtml);
     HighlightCodeBlocks();
-}   
+}
 
 function CreateDisplayableHtml(answerModel) {
     var answer = answerModel.answerInHtmlFormat;
