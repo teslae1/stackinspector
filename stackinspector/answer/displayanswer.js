@@ -36,7 +36,7 @@ function GetTopOffsetLineBreaksCalculatedWidthFontSize(fontSize, offSetHeight) {
     var inches = fontSize * (1 / 73);
     var pixelsPrLineBreak = inches * 96;
 
-    var lineBreaks = "";
+    var lineBreaks = "<br/>";
     var currentPixelHeight = 0;
     while (currentPixelHeight < offSetHeight) {
         lineBreaks += "<br/>";
