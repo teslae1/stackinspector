@@ -26,19 +26,25 @@ function GetTopOffsetAsHtmlLineBreaks(fontSize) {
     var googleDidAddItsOwnRightSideContent = offSetHeight > 20;
 
     if (googleDidAddItsOwnRightSideContent) {
-        var breaks = "";
-        var pxlsPrBreak = fontSize;
-        var currentHeight = 0;
-        while (currentHeight < offSetHeight) {
-            breaks += "<br/>";
-            currentHeight += pxlsPrBreak;
-        }
-        return breaks;
+        return GetTopOffsetLineBreaksCalculatedWidthFontSize(fontSize, offSetHeight);
     }
 
     return "";
 }
 
+function GetTopOffsetLineBreaksCalculatedWidthFontSize(fontSize, offSetHeight) {
+    var inches = fontSize * (1 / 73);
+    var pixelsPrLineBreak = inches * 96;
+
+    var lineBreaks = "";
+    var currentPixelHeight = 0;
+    while (currentPixelHeight < offSetHeight) {
+        lineBreaks += "<br/>";
+        currentPixelHeight += pixelsPrLineBreak;
+    }
+    return lineBreaks;
+    
+}
 
 function GetAutoDetectedWidth() {
     var centerCol = document.getElementById("center_col");
