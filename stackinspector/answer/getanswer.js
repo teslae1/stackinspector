@@ -28,14 +28,23 @@ async function StartGetAndShowAnswerProcess() {
     ShowLoadingIcon();
 
     try {
-        var answerModel = await GetFirstOrDefaultAnswer();
-        await DisplayAnswer(answerModel);
+        var answer = await GetFirstOrDefaultAnswer();
+        if (answer.score > 0) {
+            await DisplayAnswer(answer);
+        }
+        else {
+            WaitAndHideLoadingIcon(200);
+        }
     }
     catch {
-        setTimeout(function () {
-        HideLoadingIcon();
-        }, 200);
+        WaitAndHideLoadingIcon(200);
     }
+}
+
+function WaitAndHideLoadingIcon(timeToWaitMilliseconds) {
+        setTimeout(function () {
+            HideLoadingIcon();
+        }, timeToWaitMilliseconds);
 }
 
 function SleepMilisecondsAndHideLoadingIcon(milisecondsToWait) {
