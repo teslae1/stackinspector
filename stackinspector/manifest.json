@@ -30,7 +30,7 @@
   },
   "permissions": [
     "storage",
-    "https://google.*/search"
+    "https://google.com/search"
   ],
   "web_accessible_resources": [
     "answer/codehighlights/styles/solarized-light.css",
