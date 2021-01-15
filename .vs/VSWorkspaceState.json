@@ -2,8 +2,7 @@
   "ExpandedNodes": [
     "",
     "\\stackinspector",
-    "\\stackinspector\\answer",
-    "\\stackinspector\\popup\\html"
+    "\\stackinspector\\answer"
   ],
   "SelectedNode": "\\stackinspector\\answer\\getanswer.js",
   "PreviewInSolutionExplorer": false

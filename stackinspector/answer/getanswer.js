@@ -1,7 +1,12 @@
 chrome.extension.sendMessage({}, OnPageLoad);
 
+const minWindowWidth = 1040;
+
+const months = ["Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec"];
+
  function OnPageLoad() {
-    if (!HasStackOverflowLinkInSearchResults()) {
+     if (!HasStackOverflowLinkInSearchResults() || 
+        ScreenWidthTooSmallForAnswer()) {
         return;
     }
 
@@ -21,6 +26,11 @@ function HasStackOverflowLinkInSearchResults() {
         }
     }
     return false;
+}
+    
+function ScreenWidthTooSmallForAnswer() {
+    var width = $(window).width();
+    return width < minWindowWidth;
 }
 
 async function StartGetAndShowAnswerProcess() {
@@ -79,12 +89,18 @@ function IsStackOverflowSearchResult(result) {
 async function GetStackOverflowAnswerAsync(result) {
     let response = await GetResponse(result);
     let jsonResponse = await response.json();
+    console.log(jsonResponse);
+    var lastEditedDate = GetDateAsString(jsonResponse.items[0].last_edit_date);
+    var creationDate = GetDateAsString(jsonResponse.items[0].creation_date);
     if (questionHadAnswers(jsonResponse)) {
         return {
             answerInHtmlFormat: jsonResponse.items[0].body,
             score: jsonResponse.items[0].score,
             question: GetQuestionFromHtmlResult(result),
-            link: GetQuestionLinkFromhtmlResult(result)
+            link: GetQuestionLinkFromhtmlResult(result),
+            lastEditedDate: lastEditedDate,
+            creationDate: creationDate
+
         };
     }
     else {
@@ -92,6 +108,17 @@ async function GetStackOverflowAnswerAsync(result) {
     }
 
 }
+
+function GetDateAsString(unixTimeStamp) {
+    if (unixTimeStamp == null) {
+        return null;
+    }
+    var date = new Date(unixTimeStamp * 1000);
+    var monthName = months[date.getMonth()];
+    
+    return monthName + " " + date.getUTCDate() + "' " + date.getFullYear();
+}
+
 
 const regex = "stackoverflow.com/questions/(.*?)/";
 const uriStart = "https://api.stackexchange.com/2.2/questions/";

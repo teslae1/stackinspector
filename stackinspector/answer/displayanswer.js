@@ -1,4 +1,4 @@
-
+﻿
 const loadingImageHtml = "<img style='height:80; color:red; background-color:transparent; width:60px; padding-right:44px;' src='https://infallible-aryabhata-eaf64f.netlify.app/cloadinggif.gif' />";
 const loadingIconHtmlId = "loadingIcon";
 const questionHtmlId = "question";
@@ -124,17 +124,25 @@ function HideLoadingIcon() {
 
 async function DisplayAnswer(answerModel) {
     await AddCodeHighlightStyleSheetToHeadFromLocalStorageSettingOrDefault();
-    var displayableHtml = CreateDisplayableHtml(answerModel);
+    var displayableHtml = CreateDisplayableAnswerHtml(answerModel);
     await LoadHtmlIntoRightHandSideOfSearchPage(displayableHtml);
     HighlightCodeBlocks();
 }
 
-function CreateDisplayableHtml(answerModel) {
-    var answer = answerModel.answerInHtmlFormat;
+function CreateDisplayableAnswerHtml(answerModel) {
     var scoreBadgeHtml = GetScoreBadgeHtml(answerModel);
-    var displayableHtml = "Answer for question: <a style='color:blue; font-weight:bold;' href='" + answerModel.link + "'>" + answerModel.question + "</a> <br><br>";
-    var displayableHtmlWithScoreBadgeAndAnswer = displayableHtml + scoreBadgeHtml + answer;
+    var dateHtml = GetDateHtml(answerModel);
+    var questionLinkHtml = "Answer for question: <a style='color:blue; font-weight:bold;' href='" + answerModel.link + "'>"
+        + answerModel.question +
+        "</a> ";
+    var answer = answerModel.answerInHtmlFormat;
+    var displayableHtmlWithScoreBadgeAndAnswer = questionLinkHtml  + " <br/>" + dateHtml +"<br/> <br/>" +  scoreBadgeHtml + answer;
     return displayableHtmlWithScoreBadgeAndAnswer;
+}
+
+function GetDateHtml(answerModel) {
+    var date = answerModel.lastEditedDate == null ? answerModel.creationDate : answerModel.lastEditedDate;
+    return "<i style='font-style:italic; color:gray; '>Posted: " + date + "</i> ";
 }
 
 function GetScoreBadgeHtml(answerModel) {
