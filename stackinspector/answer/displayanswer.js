@@ -1,22 +1,67 @@
 ﻿
+window.onresize = async function (event) {
+    if (!IsDisplayingAnswer()) {
+        return;
+    }
+
+    if (ScreenWidthTooSmallForAnswer()) {
+        Hide(answerHtmlId);
+    }
+    else {
+        Show(answerHtmlId);
+    }
+
+    await ReCalculateAnswerWidthAsync();
+};
+
+
+function ScreenWidthTooSmallForAnswer() {
+    var width = $(window).width();
+    return width < minWindowWidth;
+}
+
+function Hide(htmlId) {
+    document.getElementById(htmlId).style.display = "none";
+}
+
+function Show(htmlId) {
+    document.getElementById(htmlId).style.display = "";
+}
+
+function IsDisplayingAnswer() {
+    var html = document.getElementById(answerHtmlId);
+    return html != null;
+}
+
+async function ReCalculateAnswerWidthAsync() {
+    var userDefinedTheirOwnWidth = await GetShouldUseCustomWidthSettingFromLocalStorage();
+    if (userDefinedTheirOwnWidth) {
+        return;
+    }
+
+    var autoWidth = GetAutoDetectedWidth();
+    document.getElementById(answerHtmlId).style.width = autoWidth + "%";
+}
+
 const loadingImageHtml = "<img style='height:80; color:red; background-color:transparent; width:60px; padding-right:44px;' src='https://infallible-aryabhata-eaf64f.netlify.app/cloadinggif.gif' />";
 const loadingIconHtmlId = "loadingIcon";
-const questionHtmlId = "question";
+const answerHtmlId = "question";
 const questionHtmlFadeInMiliseconds = 1000;
 const defaultFontSize = 16;
 const answerZIndex = 2;
 const defaultCodeHighlightSetting = "gruvbox-dark";
 const maxAnswerWidthInPixels = 950;
 const gifSizePixels = 45;
+const minWindowWidth = 1040;
 
 async function LoadHtmlIntoRightHandSideOfSearchPage(html) {
     var width = await GetAnswerWidthSettingFromLocalStorageOrDefault();
     var fontSize = await GetAnswerFontSizeSettingFromLocalStorageOrDefault();
     var lineBreaksForTopOffset = GetTopOffsetAsHtmlLineBreaks(fontSize);
-    var startHtml = "<div id='" + questionHtmlId + "' class='col-12'  style=' font-size:" + fontSize + "px; display:none;  width:" + width + "%;  text-overflow:ellipsis; z-index:" + answerZIndex + "; position:absolute; right:5%; text-align:left;'> " + lineBreaksForTopOffset + html + " </div>"
+    var startHtml = "<div id='" + answerHtmlId + "' class='col-12'  style=' font-size:" + fontSize + "px; display:none;  width:" + width + "%;  text-overflow:ellipsis; z-index:" + answerZIndex + "; position:absolute; right:5%; text-align:left;'> " + lineBreaksForTopOffset + html + " </div>"
     var atvcapDiv = document.getElementById("atvcap");
     atvcapDiv.insertAdjacentHTML("afterend", startHtml);
-    $("#" + questionHtmlId).fadeIn(questionHtmlFadeInMiliseconds);
+    $("#" + answerHtmlId).fadeIn(questionHtmlFadeInMiliseconds);
     HideLoadingIcon();
 }
 
@@ -43,7 +88,7 @@ function GetTopOffsetLineBreaksCalculatedWidthFontSize(fontSize, offSetHeight) {
         currentPixelHeight += pixelsPrLineBreak;
     }
     return lineBreaks;
-    
+
 }
 
 function GetAutoDetectedWidth() {
@@ -127,6 +172,10 @@ async function DisplayAnswer(answerModel) {
     var displayableHtml = CreateDisplayableAnswerHtml(answerModel);
     await LoadHtmlIntoRightHandSideOfSearchPage(displayableHtml);
     HighlightCodeBlocks();
+
+    if (ScreenWidthTooSmallForAnswer) {
+        Hide(answerHtmlId);
+    }
 }
 
 function CreateDisplayableAnswerHtml(answerModel) {
@@ -136,7 +185,7 @@ function CreateDisplayableAnswerHtml(answerModel) {
         + answerModel.question +
         "</a> ";
     var answer = answerModel.answerInHtmlFormat;
-    var displayableHtmlWithScoreBadgeAndAnswer = questionLinkHtml  + " <br/>" + dateHtml +"<br/> <br/>" +  scoreBadgeHtml + answer;
+    var displayableHtmlWithScoreBadgeAndAnswer = questionLinkHtml + " <br/>" + dateHtml + "<br/> <br/>" + scoreBadgeHtml + answer;
     return displayableHtmlWithScoreBadgeAndAnswer;
 }
 
@@ -163,5 +212,5 @@ chrome.extension.onRequest.addListener(function (newSettings, sender, sendRespon
 
 function UpdateDisplayedAnswerWidthSetting(width) {
 
-    document.getElementById(questionHtmlId).style.width = width + "%";
+    document.getElementById(answerHtmlId).style.width = width + "%";
 }

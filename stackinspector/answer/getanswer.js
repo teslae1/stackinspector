@@ -1,12 +1,11 @@
 chrome.extension.sendMessage({}, OnPageLoad);
 
-const minWindowWidth = 1040;
+const minScoreForValidAnswers = 1;
 
 const months = ["Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec"];
 
- function OnPageLoad() {
-     if (!HasStackOverflowLinkInSearchResults() || 
-        ScreenWidthTooSmallForAnswer()) {
+function OnPageLoad() {
+    if (!HasStackOverflowLinkInSearchResults()) {
         return;
     }
 
@@ -27,11 +26,7 @@ function HasStackOverflowLinkInSearchResults() {
     }
     return false;
 }
-    
-function ScreenWidthTooSmallForAnswer() {
-    var width = $(window).width();
-    return width < minWindowWidth;
-}
+
 
 async function StartGetAndShowAnswerProcess() {
 
@@ -39,12 +34,7 @@ async function StartGetAndShowAnswerProcess() {
 
     try {
         var answer = await GetFirstOrDefaultAnswer();
-        if (answer.score > 0) {
-            await DisplayAnswer(answer);
-        }
-        else {
-            WaitAndHideLoadingIcon(200);
-        }
+        await DisplayAnswer(answer);
     }
     catch {
         WaitAndHideLoadingIcon(200);
@@ -52,9 +42,9 @@ async function StartGetAndShowAnswerProcess() {
 }
 
 function WaitAndHideLoadingIcon(timeToWaitMilliseconds) {
-        setTimeout(function () {
-            HideLoadingIcon();
-        }, timeToWaitMilliseconds);
+    setTimeout(function () {
+        HideLoadingIcon();
+    }, timeToWaitMilliseconds);
 }
 
 function SleepMilisecondsAndHideLoadingIcon(milisecondsToWait) {
@@ -70,7 +60,7 @@ async function GetFirstOrDefaultAnswer() {
         if (IsValidSearchResult(result) &&
             IsStackOverflowSearchResult(result)) {
             try {
-                return await GetStackOverflowAnswerAsync(result);
+                return await GetValidStackoverflowAnswerAsync(result);
             }
             catch (ee) {
             }
@@ -86,16 +76,20 @@ function IsStackOverflowSearchResult(result) {
     return result.textContent.includes("stackoverflow.com");
 }
 
-async function GetStackOverflowAnswerAsync(result) {
+async function GetValidStackoverflowAnswerAsync(result) {
     let response = await GetResponse(result);
     let jsonResponse = await response.json();
-    console.log(jsonResponse);
+    var score = jsonResponse.items[0].score;
+    if (score < minScoreForValidAnswers) {
+        throw "invalid score";
+    }
+
     var lastEditedDate = GetDateAsString(jsonResponse.items[0].last_edit_date);
     var creationDate = GetDateAsString(jsonResponse.items[0].creation_date);
     if (questionHadAnswers(jsonResponse)) {
         return {
             answerInHtmlFormat: jsonResponse.items[0].body,
-            score: jsonResponse.items[0].score,
+            score: score,
             question: GetQuestionFromHtmlResult(result),
             link: GetQuestionLinkFromhtmlResult(result),
             lastEditedDate: lastEditedDate,
@@ -115,7 +109,7 @@ function GetDateAsString(unixTimeStamp) {
     }
     var date = new Date(unixTimeStamp * 1000);
     var monthName = months[date.getMonth()];
-    
+
     return monthName + " " + date.getUTCDate() + "' " + date.getFullYear();
 }
 
