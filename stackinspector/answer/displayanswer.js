@@ -145,10 +145,10 @@ function CreateDisplayableAnswerHtml(answerModel) {
     html += "<br/>" + GetDateHtml(answerModel);
     html += "<br/>";
     if (answerModel.isAccepted) {
-        html += GetAcceptedAnswerHtml();
+        html += GetAcceptedAnswerHtml() + "<br/>";
     }
 
-    html += "<br/> <br/>"+ GetScoreBadgeHtml(answerModel);
+    html += " <br/>"+ GetScoreBadgeHtml(answerModel);
 
 
     html += answerModel.answerInHtmlFormat;
