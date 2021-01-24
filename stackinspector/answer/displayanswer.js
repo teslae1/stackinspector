@@ -1,47 +1,8 @@
 ﻿
 window.onresize = async function (event) {
-    if (!IsDisplayingAnswer()) {
-        return;
-    }
-
-    if (ScreenWidthTooSmallForAnswer()) {
-        Hide(answerHtmlId);
-    }
-    else {
-        Show(answerHtmlId);
-    }
-
-    await ReCalculateAnswerWidthAsync();
+      await OnRezizeWindowEventAsync();
 };
 
-
-function ScreenWidthTooSmallForAnswer() {
-    var width = $(window).width();
-    return width < minWindowWidth;
-}
-
-function Hide(htmlId) {
-    document.getElementById(htmlId).style.display = "none";
-}
-
-function Show(htmlId) {
-    document.getElementById(htmlId).style.display = "";
-}
-
-function IsDisplayingAnswer() {
-    var html = document.getElementById(answerHtmlId);
-    return html != null;
-}
-
-async function ReCalculateAnswerWidthAsync() {
-    var userDefinedTheirOwnWidth = await GetShouldUseCustomWidthSettingFromLocalStorage();
-    if (userDefinedTheirOwnWidth) {
-        return;
-    }
-
-    var autoWidth = GetAutoDetectedWidth();
-    document.getElementById(answerHtmlId).style.width = autoWidth + "%";
-}
 
 const loadingImageHtml = "<img style='height:80; color:red; background-color:transparent; width:60px; padding-right:44px;' src='https://infallible-aryabhata-eaf64f.netlify.app/cloadinggif.gif' />";
 const loadingIconHtmlId = "loadingIcon";
@@ -173,20 +134,32 @@ async function DisplayAnswer(answerModel) {
     await LoadHtmlIntoRightHandSideOfSearchPage(displayableHtml);
     HighlightCodeBlocks();
 
-    if (ScreenWidthTooSmallForAnswer) {
+    if (ScreenWidthTooSmallForAnswer()) {
         Hide(answerHtmlId);
     }
 }
 
 function CreateDisplayableAnswerHtml(answerModel) {
-    var scoreBadgeHtml = GetScoreBadgeHtml(answerModel);
-    var dateHtml = GetDateHtml(answerModel);
-    var questionLinkHtml = "Answer for question: <a style='color:blue; font-weight:bold;' href='" + answerModel.link + "'>"
+
+    var html = GetQuestionLinkHtml(answerModel);
+    html += "<br/>" + GetDateHtml(answerModel);
+    html += "<br/>";
+    if (answerModel.isAccepted) {
+        html += GetAcceptedAnswerHtml();
+    }
+
+    html += "<br/> <br/>"+ GetScoreBadgeHtml(answerModel);
+
+
+    html += answerModel.answerInHtmlFormat;
+
+    return html;
+}
+
+function GetQuestionLinkHtml(answerModel) {
+    return "Answer for question: <a style='color:blue; font-weight:bold;' href='" + answerModel.link + "'>"
         + answerModel.question +
         "</a> ";
-    var answer = answerModel.answerInHtmlFormat;
-    var displayableHtmlWithScoreBadgeAndAnswer = questionLinkHtml + " <br/>" + dateHtml + "<br/> <br/>" + scoreBadgeHtml + answer;
-    return displayableHtmlWithScoreBadgeAndAnswer;
 }
 
 function GetDateHtml(answerModel) {
@@ -196,7 +169,12 @@ function GetDateHtml(answerModel) {
 
 function GetScoreBadgeHtml(answerModel) {
     let score = answerModel.score;
-    return `<div><img src="https://img.shields.io/badge/-${score}-blue.svg?label=Answer%20Score&color=F8752E&&style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjIwIDEwIDgwIDkwIj48c3R5bGU+LnN0MHtmaWxsOiNiY2JiYmJ9LnN0MXtmaWxsOiNmNDgwMjN9PC9zdHlsZT48cGF0aCBjbGFzcz0ic3QwIiBkPSJNODQuNCA5My44VjcwLjZoNy43djMwLjlIMjIuNlY3MC42aDcuN3YyMy4yeiIvPjxwYXRoIGNsYXNzPSJzdDEiIGQ9Ik0zOC44IDY4LjRsMzcuOCA3LjkgMS42LTcuNi0zNy44LTcuOS0xLjYgNy42em01LTE4bDM1IDE2LjMgMy4yLTctMzUtMTYuNC0zLjIgNy4xem05LjctMTcuMmwyOS43IDI0LjcgNC45LTUuOS0yOS43LTI0LjctNC45IDUuOXptMTkuMi0xOC4zbC02LjIgNC42IDIzIDMxIDYuMi00LjYtMjMtMzF6TTM4IDg2aDM4LjZ2LTcuN0gzOFY4NnoiLz48L3N2Zz4="></img></div>`;
+    return `<img src="https://img.shields.io/badge/-${score}-blue.svg?label=Answer%20Score&color=F8752E&&style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjIwIDEwIDgwIDkwIj48c3R5bGU+LnN0MHtmaWxsOiNiY2JiYmJ9LnN0MXtmaWxsOiNmNDgwMjN9PC9zdHlsZT48cGF0aCBjbGFzcz0ic3QwIiBkPSJNODQuNCA5My44VjcwLjZoNy43djMwLjlIMjIuNlY3MC42aDcuN3YyMy4yeiIvPjxwYXRoIGNsYXNzPSJzdDEiIGQ9Ik0zOC44IDY4LjRsMzcuOCA3LjkgMS42LTcuNi0zNy44LTcuOS0xLjYgNy42em01LTE4bDM1IDE2LjMgMy4yLTctMzUtMTYuNC0zLjIgNy4xem05LjctMTcuMmwyOS43IDI0LjcgNC45LTUuOS0yOS43LTI0LjctNC45IDUuOXptMTkuMi0xOC4zbC02LjIgNC42IDIzIDMxIDYuMi00LjYtMjMtMzF6TTM4IDg2aDM4LjZ2LTcuN0gzOFY4NnoiLz48L3N2Zz4="></img>`;
+}
+
+function GetAcceptedAnswerHtml() {
+    return "<img src='https://www.flaticon.com/svg/vstatic/svg/390/390973.svg?token=exp=1611525045~hmac=ccac229df5566104521f168487effc62' width='20px;' height='20px;'>" +
+    " </img ><i style='font-style:italic; color:gray; '>Answer accepted as by question owner</i>  ";
 }
 
 function HighlightCodeBlocks() {
@@ -213,4 +191,48 @@ chrome.extension.onRequest.addListener(function (newSettings, sender, sendRespon
 function UpdateDisplayedAnswerWidthSetting(width) {
 
     document.getElementById(answerHtmlId).style.width = width + "%";
+}
+
+async function OnRezizeWindowEventAsync() {
+    if (!IsDisplayingAnswer()) {
+        return;
+    }
+
+    if (ScreenWidthTooSmallForAnswer()) {
+        Hide(answerHtmlId);
+    }
+    else {
+        Show(answerHtmlId);
+    }
+
+    await ReCalculateAnswerWidthAsync();
+}
+
+
+function ScreenWidthTooSmallForAnswer() {
+    var width = $(window).width();
+    return width < minWindowWidth;
+}
+
+function Hide(htmlId) {
+    document.getElementById(htmlId).style.display = "none";
+}
+
+function Show(htmlId) {
+    document.getElementById(htmlId).style.display = "";
+}
+
+function IsDisplayingAnswer() {
+    var html = document.getElementById(answerHtmlId);
+    return html != null;
+}
+
+async function ReCalculateAnswerWidthAsync() {
+    var userDefinedTheirOwnWidth = await GetShouldUseCustomWidthSettingFromLocalStorage();
+    if (userDefinedTheirOwnWidth) {
+        return;
+    }
+
+    var autoWidth = GetAutoDetectedWidth();
+    UpdateDisplayedAnswerWidthSetting(autoWidth);
 }

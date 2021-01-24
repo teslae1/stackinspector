@@ -4,6 +4,7 @@ const minScoreForValidAnswers = 1;
 
 const months = ["Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec"];
 
+
 function OnPageLoad() {
     if (!HasStackOverflowLinkInSearchResults()) {
         return;
@@ -26,7 +27,6 @@ function HasStackOverflowLinkInSearchResults() {
     }
     return false;
 }
-
 
 async function StartGetAndShowAnswerProcess() {
 
@@ -79,28 +79,60 @@ function IsStackOverflowSearchResult(result) {
 async function GetValidStackoverflowAnswerAsync(result) {
     let response = await GetResponse(result);
     let jsonResponse = await response.json();
-    var score = jsonResponse.items[0].score;
-    if (score < minScoreForValidAnswers) {
-        throw "invalid score";
+    EnsureJsonResponseHoldsAnswers(jsonResponse);
+
+    var allAnswers = jsonResponse.items;
+
+    var answer = GetAcceptedAnswer(allAnswers, result);
+    if (answer == null) {
+        answer = GetTopMostRatedAnswer(allAnswers, result);
     }
 
-    var lastEditedDate = GetDateAsString(jsonResponse.items[0].last_edit_date);
-    var creationDate = GetDateAsString(jsonResponse.items[0].creation_date);
-    if (questionHadAnswers(jsonResponse)) {
-        return {
-            answerInHtmlFormat: jsonResponse.items[0].body,
-            score: score,
-            question: GetQuestionFromHtmlResult(result),
-            link: GetQuestionLinkFromhtmlResult(result),
-            lastEditedDate: lastEditedDate,
-            creationDate: creationDate
+    EnsureValidAnswer(answer);
 
-        };
+    return answer;
+}
+
+
+function EnsureJsonResponseHoldsAnswers(jsonResponse) {
+    if (jsonResponse.items.length < 1) {
+        throw ("no answers contained inside this question");
     }
-    else {
-        throw ("no answer");
+}
+
+function GetAcceptedAnswer(allAnswers, htmlResult) {
+    for (var i = 0; i < allAnswers.length; i++) {
+        if (allAnswers[i].is_accepted) {
+            return CreateAnswerObject(allAnswers[i], htmlResult);
+        }
     }
 
+    return null;
+}
+
+function CreateAnswerObject(answer, htmlResult) {
+    var lastEditedDate = GetDateAsString(answer.last_edit_date);
+    var creationDate = GetDateAsString(answer.creation_date);
+    return {
+        answerInHtmlFormat: answer.body,
+        score: answer.score,
+        question: GetQuestionFromHtmlResult(htmlResult),
+        link: GetQuestionLinkFromhtmlResult(htmlResult),
+        lastEditedDate: lastEditedDate,
+        creationDate: creationDate,
+        isAccepted: answer.is_accepted
+    };
+}
+
+function GetTopMostRatedAnswer(allAnswers, htmlResult) {
+    //top most rated is always first in collection 
+    return CreateAnswerObject(allAnswers[0], htmlResult);
+}
+
+function EnsureValidAnswer(answer) {
+    if (answer.score < minScoreForValidAnswers) {
+        throw ("too low answer score");
+    }
 }
 
 function GetDateAsString(unixTimeStamp) {
@@ -134,10 +166,6 @@ function GetPath(result) {
 
 function IsBadResponse(response) {
     return response == null || !response || response.status !== 200;
-}
-
-function questionHadAnswers(jsonResponse) {
-    return jsonResponse.items.length;
 }
 
 function GetQuestionFromHtmlResult(result) {
