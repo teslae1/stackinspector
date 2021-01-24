@@ -174,7 +174,7 @@ function GetScoreBadgeHtml(answerModel) {
 
 function GetAcceptedAnswerHtml() {
     return "<img src='https://www.flaticon.com/svg/vstatic/svg/390/390973.svg?token=exp=1611525045~hmac=ccac229df5566104521f168487effc62' width='20px;' height='20px;'>" +
-    " </img ><i style='font-style:italic; color:gray; '>Answer accepted as by question owner</i>  ";
+    " </img ><i style='font-style:italic; color:gray; '>Answer accepted by question owner</i>  ";
 }
 
 function HighlightCodeBlocks() {
