@@ -28,6 +28,9 @@ async function LoadHtmlIntoRightHandSideOfSearchPage(html) {
 
 function GetTopOffsetAsHtmlLineBreaks(fontSize) {
     var elementWhichHoldsRightSideContent = document.getElementById("rhs");
+	if(elementWhichHoldsRightSideContent == null){
+		return 0;
+	}
     var offSetHeight = elementWhichHoldsRightSideContent.offsetHeight;
     var googleDidAddItsOwnRightSideContent = offSetHeight > 20;
 
@@ -133,8 +136,8 @@ async function DisplayAnswer(answerModel) {
     var displayableHtml = CreateDisplayableAnswerHtml(answerModel);
     await LoadHtmlIntoRightHandSideOfSearchPage(displayableHtml);
     HighlightCodeBlocks();
-
     if (ScreenWidthTooSmallForAnswer()) {
+
         Hide(answerHtmlId);
     }
 }
@@ -173,8 +176,7 @@ function GetScoreBadgeHtml(answerModel) {
 }
 
 function GetAcceptedAnswerHtml() {
-    return "<img src='https://www.flaticon.com/svg/vstatic/svg/390/390973.svg?token=exp=1611525045~hmac=ccac229df5566104521f168487effc62' width='20px;' height='20px;'>" +
-    " </img ><i style='font-style:italic; color:gray; '>Answer accepted by question owner</i>  ";
+    return " <i style='color:green; width='20px;' height='20px;'> &#10004;</i> <i style='font-style:italic; color:gray; '>Answer accepted by question owner</i>  ";
 }
 
 function HighlightCodeBlocks() {
