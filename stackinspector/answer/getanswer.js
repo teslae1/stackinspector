@@ -34,6 +34,7 @@ async function StartGetAndShowAnswerProcess() {
 
     try {
         var answer = await GetFirstOrDefaultAnswer();
+	    console.log(answer);
         await DisplayAnswer(answer);
     }
     catch {

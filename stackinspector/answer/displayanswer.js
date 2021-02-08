@@ -29,7 +29,7 @@ async function LoadHtmlIntoRightHandSideOfSearchPage(html) {
 function GetTopOffsetAsHtmlLineBreaks(fontSize) {
     var elementWhichHoldsRightSideContent = document.getElementById("rhs");
 	if(elementWhichHoldsRightSideContent == null){
-		return 0;
+		return "";
 	}
     var offSetHeight = elementWhichHoldsRightSideContent.offsetHeight;
     var googleDidAddItsOwnRightSideContent = offSetHeight > 20;
