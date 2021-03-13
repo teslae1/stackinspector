@@ -34,25 +34,18 @@ async function StartGetAndShowAnswerProcess() {
 
     try {
         var answer = await GetFirstOrDefaultAnswer();
-	    console.log(answer);
         await DisplayAnswer(answer);
     }
     catch {
-        WaitAndHideLoadingIcon(200);
+        await HandleNoAnswerFound();
     }
 }
 
-function WaitAndHideLoadingIcon(timeToWaitMilliseconds) {
-    setTimeout(function () {
+async function HandleNoAnswerFound() {
+    setTimeout(async function () {
         HideLoadingIcon();
-    }, timeToWaitMilliseconds);
-}
-
-function SleepMilisecondsAndHideLoadingIcon(milisecondsToWait) {
-    setTimeout(function () {
-        HideLoadingIcon();
-    }, milisecondsToWait
-    );
+	   await DisplayNoAnswerFoundMessageAsync(); 
+    }, 200);
 }
 
 async function GetFirstOrDefaultAnswer() {

@@ -1,7 +1,7 @@
 {
 
   "name": "stackinspector",
-  "version": "0.8",
+  "version": "0.9",
   "manifest_version": 2,
 
 
@@ -13,6 +13,9 @@
         "localstoragemanagement/localstoragemanagement.js",
         "answer/getanswer.js",
         "answer/displayanswer.js",
+        "answer/displayhtml.js",
+        "answer/displaynoanswerfoundmessage.js",
+        "answer/displayloadinggif.js",
         "answer/codehighlights/scripts/highlight.pack.js",
         "answer/jquery.js"
       ],
