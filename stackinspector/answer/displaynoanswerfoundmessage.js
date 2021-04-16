@@ -14,6 +14,6 @@ async function DisplayNoAnswerFoundMessageAsync(){
 
 
 function GetSearchText(){
-	var inputField = document.getElementsByClassName("gLFyf gsfi")[0];
+	var inputField = document.getElementsByClassName("gLFyf gsfi")[1];
 	return inputField.value; 
 }
