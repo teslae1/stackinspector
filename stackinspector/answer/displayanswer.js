@@ -47,9 +47,16 @@ function CreateDisplayableAnswerHtml(answerModel) {
 }
 
 function GetQuestionLinkHtml(answerModel) {
+	var readableQuestion = GetHtmlAsReadableText(answerModel.question);
     return "Answer for question: <a style='color:blue; font-weight:bold;' href='" + answerModel.link + "'>"
-        + answerModel.question +
+        + readableQuestion +
         "</a> ";
+}
+
+function GetHtmlAsReadableText(html){
+	html = html.replaceAll("<", "&lt;");
+	html = html.replaceAll(">", "&gt;");
+	return "<code style='font-family:inherit;'>" + html + "</code>";
 }
 
 function GetDateHtml(answerModel) {
