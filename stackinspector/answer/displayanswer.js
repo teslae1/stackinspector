@@ -5,6 +5,7 @@ window.onresize = async function (event) {
 
 const defaultCodeHighlightSetting = "gruvbox-dark";
 const minWindowWidth = 1040;
+const codeBlockCornerRadius = "5px";
 
 
 
@@ -23,6 +24,7 @@ async function DisplayAnswer(answerModel) {
     var displayableHtml = CreateDisplayableAnswerHtml(answerModel);
     await LoadHtmlIntoRightHandSideOfSearchPage(displayableHtml);
     HighlightCodeBlocks();
+    RoundCornersCodeBlocks();
     if (ScreenWidthTooSmallForAnswer()) {
 
         Hide(answerHtmlId);
@@ -42,7 +44,7 @@ function CreateDisplayableAnswerHtml(answerModel) {
 
 
     html += answerModel.answerInHtmlFormat;
-
+	
     return html;
 }
 
@@ -66,7 +68,7 @@ function GetDateHtml(answerModel) {
 
 function GetScoreBadgeHtml(answerModel) {
     let score = answerModel.score;
-    return `<img src="https://img.shields.io/badge/-${score}-blue.svg?label=Answer%20Score&color=F8752E&&style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjIwIDEwIDgwIDkwIj48c3R5bGU+LnN0MHtmaWxsOiNiY2JiYmJ9LnN0MXtmaWxsOiNmNDgwMjN9PC9zdHlsZT48cGF0aCBjbGFzcz0ic3QwIiBkPSJNODQuNCA5My44VjcwLjZoNy43djMwLjlIMjIuNlY3MC42aDcuN3YyMy4yeiIvPjxwYXRoIGNsYXNzPSJzdDEiIGQ9Ik0zOC44IDY4LjRsMzcuOCA3LjkgMS42LTcuNi0zNy44LTcuOS0xLjYgNy42em01LTE4bDM1IDE2LjMgMy4yLTctMzUtMTYuNC0zLjIgNy4xem05LjctMTcuMmwyOS43IDI0LjcgNC45LTUuOS0yOS43LTI0LjctNC45IDUuOXptMTkuMi0xOC4zbC02LjIgNC42IDIzIDMxIDYuMi00LjYtMjMtMzF6TTM4IDg2aDM4LjZ2LTcuN0gzOFY4NnoiLz48L3N2Zz4="></img>`;
+    return `<img style="border-radius:2px;" src="https://img.shields.io/badge/-${score}-blue.svg?label=Answer%20Score&color=F8752E&&style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjIwIDEwIDgwIDkwIj48c3R5bGU+LnN0MHtmaWxsOiNiY2JiYmJ9LnN0MXtmaWxsOiNmNDgwMjN9PC9zdHlsZT48cGF0aCBjbGFzcz0ic3QwIiBkPSJNODQuNCA5My44VjcwLjZoNy43djMwLjlIMjIuNlY3MC42aDcuN3YyMy4yeiIvPjxwYXRoIGNsYXNzPSJzdDEiIGQ9Ik0zOC44IDY4LjRsMzcuOCA3LjkgMS42LTcuNi0zNy44LTcuOS0xLjYgNy42em01LTE4bDM1IDE2LjMgMy4yLTctMzUtMTYuNC0zLjIgNy4xem05LjctMTcuMmwyOS43IDI0LjcgNC45LTUuOS0yOS43LTI0LjctNC45IDUuOXptMTkuMi0xOC4zbC02LjIgNC42IDIzIDMxIDYuMi00LjYtMjMtMzF6TTM4IDg2aDM4LjZ2LTcuN0gzOFY4NnoiLz48L3N2Zz4="></img>`;
 }
 
 function GetAcceptedAnswerHtml() {
@@ -77,6 +79,13 @@ function HighlightCodeBlocks() {
     document.querySelectorAll('pre code').forEach((block) => {
         hljs.highlightBlock(block)
     });
+}
+
+function RoundCornersCodeBlocks(){
+	var codeBlocks = document.getElementsByTagName("code");
+	for(var i = 0; i < codeBlocks.length;i++){
+		codeBlocks[i].style.borderRadius = codeBlockCornerRadius;
+	}
 }
 
 chrome.extension.onRequest.addListener(function (newSettings, sender, sendResponse) {
