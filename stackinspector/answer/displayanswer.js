@@ -23,11 +23,23 @@ async function DisplayAnswer(answerModel) {
     await AddCodeHighlightStyleSheetToHeadFromLocalStorageSettingOrDefault();
     var displayableHtml = CreateDisplayableAnswerHtml(answerModel);
     await LoadHtmlIntoRightHandSideOfSearchPage(displayableHtml);
-    HighlightCodeBlocks();
-    RoundCornersCodeBlocks();
+    SetupCodeBlocks();
     if (ScreenWidthTooSmallForAnswer()) {
 
         Hide(answerHtmlId);
+    }
+}
+
+function SetupCodeBlocks(){
+    HighlightCodeBlocks();
+    RoundCornersCodeBlocks();
+    RemoveShellClassFromCodeBlocks();
+}
+
+function RemoveShellClassFromCodeBlocks(){
+	var codeBlocks = document.getElementsByTagName("code");
+    for(var i = 0; i < codeBlocks.length;i++){
+        codeBlocks[i].classList.remove("shell");
     }
 }
 
