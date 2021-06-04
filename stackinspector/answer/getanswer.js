@@ -1,6 +1,5 @@
 chrome.extension.sendMessage({}, OnPageLoad);
 
-const minScoreForValidAnswers = 1;
 
 const months = ["Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec"];
 
@@ -9,7 +8,6 @@ function OnPageLoad() {
     if (!HasStackOverflowLinkInSearchResults()) {
         return;
     }
-
     StartGetAndShowAnswerProcess();
 }
 
@@ -18,11 +16,7 @@ function HasStackOverflowLinkInSearchResults() {
     for (let result of html) {
         if (IsValidSearchResult(result) &&
             IsStackOverflowSearchResult(result)) {
-            try {
                 return true;
-            }
-            catch (ee) {
-            }
         }
     }
     return false;
@@ -36,7 +30,8 @@ async function StartGetAndShowAnswerProcess() {
         var answer = await GetFirstOrDefaultAnswer();
         await DisplayAnswer(answer);
     }
-    catch {
+    catch (ee) {
+        console.log(ee);
         await HandleNoAnswerFound();
     }
 }
@@ -57,6 +52,7 @@ async function GetFirstOrDefaultAnswer() {
                 return await GetValidStackoverflowAnswerAsync(result);
             }
             catch (ee) {
+                alert(ee);
             }
         }
     }
@@ -77,12 +73,16 @@ async function GetValidStackoverflowAnswerAsync(result) {
 
     var allAnswers = jsonResponse.items;
 
+    //sequence below favors accepted answers 
     var answer = GetAcceptedAnswer(allAnswers, result);
-    if (answer == null) {
-        answer = GetTopMostRatedAnswer(allAnswers, result);
+    if (answer != null) {
+        return answer;
     }
 
-    EnsureValidAnswer(answer);
+        answer = GetTopMostRatedAnswer(allAnswers, result);
+        if(answer.score < 1){
+            throw ("No answers found rated more than 0");
+        }
 
     return answer;
 }
@@ -100,7 +100,6 @@ function GetAcceptedAnswer(allAnswers, htmlResult) {
             return CreateAnswerObject(allAnswers[i], htmlResult);
         }
     }
-
     return null;
 }
 
@@ -121,12 +120,6 @@ function CreateAnswerObject(answer, htmlResult) {
 function GetTopMostRatedAnswer(allAnswers, htmlResult) {
     //top most rated is always first in collection 
     return CreateAnswerObject(allAnswers[0], htmlResult);
-}
-
-function EnsureValidAnswer(answer) {
-    if (answer.score < minScoreForValidAnswers) {
-        throw ("too low answer score");
-    }
 }
 
 function GetDateAsString(unixTimeStamp) {
