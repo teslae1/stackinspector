@@ -31,7 +31,6 @@ async function StartGetAndShowAnswerProcess() {
         await DisplayAnswer(answer);
     }
     catch (ee) {
-        console.log(ee);
         await HandleNoAnswerFound();
     }
 }
@@ -52,7 +51,6 @@ async function GetFirstOrDefaultAnswer() {
                 return await GetValidStackoverflowAnswerAsync(result);
             }
             catch (ee) {
-                alert(ee);
             }
         }
     }
@@ -156,9 +154,10 @@ function IsBadResponse(response) {
 }
 
 function GetQuestionFromHtmlResult(result) {
+    var questionContent = result.textContent;
     var question = result.textContent.substring(0, result.textContent.indexOf("- Stack"));
     if (question == null || question.length == 0) {
-        question = result.textContent.substring(0, result.textContent.indexOf("stackoverflow.com"))
+        question = result.textContent.substring(0, result.textContent.indexOf("https://stackoverflow.com"))
     }
     return question;
 }
