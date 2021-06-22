@@ -102,6 +102,7 @@ function GetAcceptedAnswer(allAnswers, htmlResult) {
 }
 
 function CreateAnswerObject(answer, htmlResult) {
+
     var lastEditedDate = GetDateAsString(answer.last_edit_date);
     var creationDate = GetDateAsString(answer.creation_date);
     return {
@@ -155,10 +156,14 @@ function IsBadResponse(response) {
 
 function GetQuestionFromHtmlResult(result) {
     var questionContent = result.textContent;
-    var question = result.textContent.substring(0, result.textContent.indexOf("- Stack"));
+    var question = questionContent.substring(0, questionContent.indexOf("- Stack"));
     if (question == null || question.length == 0) {
-        question = result.textContent.substring(0, result.textContent.indexOf("https://stackoverflow.com"))
+        question = questionContent.substring(0, questionContent.indexOf("https://stackoverflow.com"))
     }
+    if(question == null || question.length == 0){
+        question = questionContent.substring(0, questionContent.indexOf("stackoverflow.com"))
+    }
+
     return question;
 }
 
