@@ -1,4 +1,5 @@
 const focusBtnId = "focusbtn";
+const focusBtnEyeImageId = "eyeimg";
 const focusOverlayId = "focusOverlay";
 const animationSpeed = 400;
 const defaultImgSize = 30;
@@ -10,8 +11,8 @@ function InitFocusMode(html){
     var style = div.style;
     style.paddingTop = "50px";
     style.align = "center";
-    style.paddingRight = "20%";
-    style.paddingLeft = "20%";
+    style.paddingRight = "15%";
+    style.paddingLeft = "15%";
     style.maxWidth = "1000px";
     div.insertAdjacentHTML("beforeend", html);
     mainDiv.appendChild(div);
@@ -36,7 +37,7 @@ function GetMainDiv(){
 function GetFocusButtonHtml(){
     //return "<div id='"+ focusBtnId + "' style='float:right'> FOCUS</div>";
     var url = chrome.runtime.getURL("answer/eye.png");
-    return "<a id='"+focusBtnId+"'  style='float:right; border:none; background-color:transparent; cursor:pointer; outline:none;'> <img src='" + url+ "' height='"+defaultImgSize+"' width='"+defaultImgSize+"'></img> </a>";
+    return "<a id='"+focusBtnId+"'  style='float:right; border:none; background-color:transparent; cursor:pointer; outline:none; width:"+defaultImgSize+"; height:"+defaultImgSize+"'> <img id='"+focusBtnEyeImageId+"'src='" + url+ "' height='"+defaultImgSize+"' width='"+defaultImgSize+"'></img> </a>";
 
 }
 
@@ -60,12 +61,12 @@ function FocusModeIsOn(){
 }
 
 function OnHover(){
-    document.getElementById(focusBtnId).width = defaultImgSize + 1;
-    document.getElementById(focusBtnId).height = defaultImgSize + 1;
+    document.getElementById(focusBtnEyeImageId).width = defaultImgSize + 1;
+    document.getElementById(focusBtnEyeImageId).height = defaultImgSize + 1;
 }
 
 function OnLeave(){
-    document.getElementById(focusBtnId).width = defaultImgSize;
-    document.getElementById(focusBtnId).height = defaultImgSize;
+    document.getElementById(focusBtnEyeImageId).width = defaultImgSize;
+    document.getElementById(focusBtnEyeImageId).height = defaultImgSize;
 }
 
