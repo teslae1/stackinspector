@@ -30,7 +30,7 @@ async function StartGetAndShowAnswerProcess() {
     try {
         var answer = await GetFirstOrDefaultAnswer();
         await DisplayAnswer(answer);
-        AddEnterFocusModeEventOnClick();
+        SetupFocusModeEvents();
     }
     catch (ee) {
         await HandleNoAnswerFound();

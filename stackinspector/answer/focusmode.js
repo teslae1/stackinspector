@@ -11,9 +11,8 @@ function InitFocusMode(html){
     var style = div.style;
     style.paddingTop = "50px";
     style.align = "center";
-    style.paddingRight = "15%";
-    style.paddingLeft = "15%";
-    style.maxWidth = "1000px";
+    style.marginRight = "15%";
+    style.marginLeft = "15%";
     div.insertAdjacentHTML("beforeend", html);
     mainDiv.appendChild(div);
     document.body.appendChild(mainDiv);
@@ -41,7 +40,21 @@ function GetFocusButtonHtml(){
 
 }
 
-function AddEnterFocusModeEventOnClick(){
+function SetupFocusModeEvents(){
+    AddEnterFocusModeBtnEvents();
+    AddExitOnEscapeFocus();
+}
+
+function AddExitOnEscapeFocus(){
+    var e = document.getElementById(focusOverlayId);
+    e.addEventListener("click", function(e) { 
+        if(e.target == this){
+            $("#" + focusOverlayId).fadeOut(animationSpeed);
+        }
+    });
+}
+
+function AddEnterFocusModeBtnEvents(){
     var element = document.getElementById(focusBtnId);
     element.onclick = EnterFocusMode;
     element.onmouseover = OnHover;
@@ -52,8 +65,7 @@ function EnterFocusMode(){
     $("#" + focusOverlayId).fadeIn(animationSpeed);
 }
 
-function ExitFocusMode(){
-    $("#" + focusOverlayId).fadeOut(animationSpeed);
+function ExitFocusMode(s, e){
 }
 
 function FocusModeIsOn(){
