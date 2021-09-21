@@ -11,6 +11,7 @@
       "matches": [ "*://*/*" ],
       "js": [
         "localstoragemanagement/localstoragemanagement.js",
+        "answer/focusmode.js",
         "answer/getanswer.js",
         "answer/displayanswer.js",
         "answer/displayhtml.js",
@@ -40,6 +41,7 @@
     "answer/codehighlights/styles/gruvbox-dark.css",
     "answer/loading.gif",
     "answer/icon.png",
+    "answer/eye.png",
     "cirkel.png"
   ],
   "icons": {

@@ -9,6 +9,7 @@ function OnPageLoad() {
         return;
     }
     StartGetAndShowAnswerProcess();
+
 }
 
 function HasStackOverflowLinkInSearchResults() {
@@ -29,6 +30,7 @@ async function StartGetAndShowAnswerProcess() {
     try {
         var answer = await GetFirstOrDefaultAnswer();
         await DisplayAnswer(answer);
+        AddEnterFocusModeEventOnClick();
     }
     catch (ee) {
         await HandleNoAnswerFound();

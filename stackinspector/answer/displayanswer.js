@@ -21,11 +21,11 @@ async function AddCodeHighlightStyleSheetToHeadFromLocalStorageSettingOrDefault(
 
 async function DisplayAnswer(answerModel) {
     await AddCodeHighlightStyleSheetToHeadFromLocalStorageSettingOrDefault();
-    var displayableHtml = CreateDisplayableAnswerHtml(answerModel);
+    var displayableHtml = CreateDisplayableAnswerHtml(answerModel, true);
     await LoadHtmlIntoRightHandSideOfSearchPage(displayableHtml);
+    InitFocusMode(CreateDisplayableAnswerHtml(answerModel, false));
     SetupCodeBlocks();
     if (ScreenWidthTooSmallForAnswer()) {
-
         Hide(answerHtmlId);
     }
 }
@@ -43,7 +43,7 @@ function RemoveShellClassFromCodeBlocks(){
     }
 }
 
-function CreateDisplayableAnswerHtml(answerModel) {
+function CreateDisplayableAnswerHtml(answerModel, withFocusModeButton) {
 
     var html = GetQuestionLinkHtml(answerModel);
     html += "<br/>" + GetDateHtml(answerModel);
@@ -54,6 +54,9 @@ function CreateDisplayableAnswerHtml(answerModel) {
 
     html += " <br/>"+ GetScoreBadgeHtml(answerModel);
 
+    if(withFocusModeButton){
+        html += GetFocusButtonHtml();
+    }
 
     html += answerModel.answerInHtmlFormat;
 	
