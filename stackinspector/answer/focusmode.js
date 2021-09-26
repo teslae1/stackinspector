@@ -4,8 +4,17 @@ const focusOverlayId = "focusOverlay";
 const animationSpeed = 400;
 const defaultImgSize = 30;
 
+document.addEventListener('keydown', function (e){
+    if(e.key == "Escape"){
+        ExitFocusMode();
+    }
+});
 
-function InitFocusMode(html){
+function InitFocusMode(answerHtml){
+    SetupFocusOverlay(answerHtml);
+}
+
+function SetupFocusOverlay(html){
     var mainDiv = GetMainDiv();
     var div = document.createElement("div");
     var style = div.style;
@@ -30,6 +39,23 @@ function GetMainDiv(){
     style.backgroundColor = "white";
     style.zIndex = 10000000000;
     style.display = "none";
+
+    div.appendChild(GetExitFocusModeDiv());
+
+    return div;
+}
+
+function GetExitFocusModeDiv(){
+    var div = document.createElement("div");
+    var style = div.style;
+    style.textAlign = "right";
+    style.paddingRight = "30px";
+    style.paddingTop = "20px";
+    var btn = document.createElement("btn");
+    btn.innerHTML = "X";
+    btn.style.fontSize = "18px";
+    btn.style.color = "gray";
+    div.appendChild(btn);
     return div;
 }
 
@@ -49,7 +75,7 @@ function AddExitOnEscapeFocus(){
     var e = document.getElementById(focusOverlayId);
     e.addEventListener("click", function(e) { 
         if(e.target == this){
-            $("#" + focusOverlayId).fadeOut(animationSpeed);
+            ExitFocusMode();
         }
     });
 }
@@ -66,6 +92,7 @@ function EnterFocusMode(){
 }
 
 function ExitFocusMode(s, e){
+    $("#" + focusOverlayId).fadeOut(animationSpeed);
 }
 
 function FocusModeIsOn(){
