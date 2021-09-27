@@ -55,6 +55,8 @@ function GetExitFocusModeDiv(){
     btn.innerHTML = "X";
     btn.style.fontSize = "18px";
     btn.style.color = "gray";
+    btn.style.cursor = "pointer";
+    btn.onclick = ExitFocusMode;
     div.appendChild(btn);
     return div;
 }
