@@ -19,9 +19,9 @@ function SetupFocusOverlay(html){
     var div = document.createElement("div");
     var style = div.style;
     style.paddingTop = "50px";
+    style.margin = "0 auto";
+    style.width = "1000px";
     style.align = "center";
-    style.marginRight = "15%";
-    style.marginLeft = "15%";
     div.insertAdjacentHTML("beforeend", html);
     mainDiv.appendChild(div);
     document.body.appendChild(mainDiv);
