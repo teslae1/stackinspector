@@ -65,9 +65,13 @@ async function GetAnswerFontSizeSettingFromLocalStorageOrDefault() {
 
 function GetTopOffsetAsHtmlLineBreaks(fontSize) {
     var elementWhichHoldsRightSideContent = document.getElementById("rhs");
+    // maybe this is the new class ?? M8OgIe
 	if(elementWhichHoldsRightSideContent == null){
 		return "";
 	}
+
+    //alert("Did locate blocking element");
+
     var offSetHeight = elementWhichHoldsRightSideContent.offsetHeight;
     var googleDidAddItsOwnRightSideContent = offSetHeight > 20;
 
