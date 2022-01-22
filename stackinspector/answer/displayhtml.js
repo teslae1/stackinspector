@@ -64,23 +64,37 @@ async function GetAnswerFontSizeSettingFromLocalStorageOrDefault() {
 }
 
 function GetTopOffsetAsHtmlLineBreaks(fontSize) {
-    var elementWhichHoldsRightSideContent = document.getElementById("rhs");
-    // maybe this is the new class ?? M8OgIe
-	if(elementWhichHoldsRightSideContent == null){
-		return "";
-	}
-
-    //alert("Did locate blocking element");
-
-    var offSetHeight = elementWhichHoldsRightSideContent.offsetHeight;
-    var googleDidAddItsOwnRightSideContent = offSetHeight > 20;
-
-    if (googleDidAddItsOwnRightSideContent) {
-        return GetTopOffsetLineBreaksCalculatedWidthFontSize(fontSize, offSetHeight);
+    var rightSideContent = GetRightSideContent();
+    if (rightSideContent == null) {
+        return "";
     }
 
-    return "";
+    return GetTopOffsetLineBreaksCalculatedWidthFontSize(fontSize, rightSideContent.clientHeight);
 }
+
+function GetRightSideContent() {
+    var rightSideContent = document.getElementById("rhs");
+    if (rightSideContent != null
+        && rightSideContent.offsetHeight > 20) {
+        return rightSideContent;
+    }
+
+
+    var container = document.getElementById("rcnt");
+    if (container == null) {
+        return null;
+    }
+
+    var fullWidthContent = container.firstChild;
+    while(fullWidthContent != null  
+        && (!fullWidthContent.firstChild || fullWidthContent.firstChild.tagName != "H1")) {
+        fullWidthContent = fullWidthContent.nextSibling;
+    }
+
+
+    return fullWidthContent;
+}
+
 
 function GetTopOffsetLineBreaksCalculatedWidthFontSize(fontSize, offSetHeight) {
     var inches = fontSize * (1 / 73);
