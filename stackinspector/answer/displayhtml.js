@@ -1,4 +1,5 @@
 
+
 const maxAnswerWidthInPixels = 950;
 const answerHtmlId = "question";
 const answerZIndex = 2;
@@ -107,5 +108,4 @@ function GetTopOffsetLineBreaksCalculatedWidthFontSize(fontSize, offSetHeight) {
         currentPixelHeight += pixelsPrLineBreak;
     }
     return lineBreaks;
-
 }
