@@ -147,7 +147,7 @@ async function GetResponse(result) {
 }
 
 function GetPath(result) {
-    let href = result.childNodes[0].href;
+    let href = result.childNodes[0].childNodes[0].href;
     let matches = href.match(regex);
     return matches[1];
 }
