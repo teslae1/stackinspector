@@ -170,5 +170,5 @@ function GetQuestionFromHtmlResult(result) {
 }
 
 function GetQuestionLinkFromhtmlResult(result) {
-    return result.firstChild.href;
+    return result.firstChild.firstChild.href;
 }
