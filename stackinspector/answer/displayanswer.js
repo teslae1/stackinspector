@@ -74,6 +74,11 @@ function GetHtmlAsReadableText(html){
 	html = html.replaceAll("<", "&lt;");
 	html = html.replaceAll(">", "&gt;");
     html = html.replaceAll("stackoverflow.com", "");
+	const stackOverflowPostfix = "Stack Overflow";
+	if(html.endsWith(stackOverflowPostfix)){
+		html = html.substring(0, html.length - stackOverflowPostfix.length);
+	}
+
 	return "<code style='font-family:inherit;'>" + html + "</code>";
 }
 
