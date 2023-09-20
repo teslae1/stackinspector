@@ -147,7 +147,7 @@ async function GetResponse(result) {
 }
 
 function GetPath(result) {
-    let href = result.childNodes[0].childNodes[0].href;
+    let href = result.childNodes[0].childNodes[0].firstChild.href;
     let matches = href.match(regex);
     return matches[1];
 }
@@ -170,5 +170,5 @@ function GetQuestionFromHtmlResult(result) {
 }
 
 function GetQuestionLinkFromhtmlResult(result) {
-    return result.firstChild.firstChild.href;
+    return result.firstChild.firstChild.firstChild.href;
 }
