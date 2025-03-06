@@ -83,8 +83,8 @@ function OnWidthSettingChangeEvent() {
     var newWidthSetting = document.getElementById(widthInputFieldId).value;
     //save width setting
     //call width setting in displayanswer
-    chrome.tabs.getSelected(null, function (tab) {
-        chrome.tabs.sendRequest(tab.id, { width: newWidthSetting }, function (response) {
+    chrome.tabs.query(null, function (tab) {
+        chrome.runtime.sendMessage(tab.id, { width: newWidthSetting }, function (response) {
         });
     });
 }

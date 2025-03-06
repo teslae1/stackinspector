@@ -1,8 +1,8 @@
 {
 
   "name": "stackinspector",
-  "version": "1.1.6",
-  "manifest_version": 2,
+  "version": "1.2.0",
+  "manifest_version": 3,
 
 
   "content_scripts": [
@@ -28,21 +28,30 @@
       ]
     }
   ],
-  "browser_action": {
+  "action": {
     "default_popup": "popup/html/popup.html",
     "default_title": "StackView"
   },
   "permissions": [
-    "storage",
-    "https://google.com/search"
+    "storage"
+  ],
+  "host_permissions": [
+ 	"https://google.com/search"
   ],
   "web_accessible_resources": [
-    "answer/codehighlights/styles/solarized-light.css",
-    "answer/codehighlights/styles/gruvbox-dark.css",
-    "answer/loading.gif",
-    "answer/icon.png",
-    "answer/eye.png",
-    "cirkel.png"
+	  {
+		  "resources": [
+    			"answer/codehighlights/styles/solarized-light.css",
+    			"answer/codehighlights/styles/gruvbox-dark.css",
+    			"answer/loading.gif",
+    			"answer/icon.png",
+    			"answer/eye.png",
+    			"cirkel.png"
+		  ],
+		  "matches": [
+			  "<all_urls>"
+		  ]
+	  }
   ],
   "icons": {
     "16": "answer/icon.png",

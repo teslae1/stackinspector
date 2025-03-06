@@ -14,7 +14,7 @@ async function AddCodeHighlightStyleSheetToHeadFromLocalStorageSettingOrDefault(
     if (cssFileSettingFromLocalStorage == null) {
         cssFileSettingFromLocalStorage = defaultCodeHighlightSetting;
     }
-    var styleSheetHref = chrome.extension.getURL("answer/codehighlights/styles/" + cssFileSettingFromLocalStorage + ".css");
+    var styleSheetHref = chrome.runtime.getURL("answer/codehighlights/styles/" + cssFileSettingFromLocalStorage + ".css");
     $("<link rel='stylesheet' type='text/css' href='" + styleSheetHref + "'> ").appendTo("head");
 }
 
@@ -109,8 +109,7 @@ function RoundCornersCodeBlocks(){
 	}
 }
 
-chrome.extension.onRequest.addListener(function (newSettings, sender, sendResponse) {
-
+chrome.runtime.onMessage.addListener(function (newSettings, sender, sendResponse) {
     UpdateDisplayedAnswerWidthSetting(newSettings.width);
 });
 

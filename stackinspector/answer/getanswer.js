@@ -1,4 +1,4 @@
-chrome.extension.sendMessage({}, OnPageLoad);
+chrome.runtime.sendMessage({}, OnPageLoad);
 
 
 const months = ["Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec"];
