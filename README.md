@@ -1,6 +1,10 @@
 # stackinspector
 chrome extension for enriching google search results with best matching stackoverflow question and answer.
 
+# achievements
+## featured in the chrome store for following best practices
+[](./images/featured.png)
+
 # load in browser to test unpacked
 - open chrome browser 
 - go to chrome://extensions
