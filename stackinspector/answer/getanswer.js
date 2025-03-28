@@ -9,7 +9,6 @@ function OnPageLoad() {
         return;
     }
     StartGetAndShowAnswerProcess();
-
 }
 
 function HasStackOverflowLinkInSearchResults() {
@@ -63,7 +62,7 @@ function IsValidSearchResult(result) {
 }
 
 function IsStackOverflowSearchResult(result) {
-    return result.textContent.includes("stackoverflow.com");
+    return result.innerHTML.includes("stackoverflow.com");
 }
 
 async function GetValidStackoverflowAnswerAsync(result) {
@@ -158,7 +157,7 @@ function IsBadResponse(response) {
 
 function GetQuestionFromHtmlResult(result) {
     var questionContent = result.textContent;
-    var question = questionContent.substring(0, questionContent.indexOf("- Stack"));
+    var question = questionContent.substring(0, questionContent.indexOf("Stack Overflow"));
     if (question == null || question.length == 0) {
         question = questionContent.substring(0, questionContent.indexOf("https://stackoverflow.com"))
     }
